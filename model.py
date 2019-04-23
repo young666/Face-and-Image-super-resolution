@@ -1,12 +1,19 @@
 import torch.nn as nn
-import torch
-import torch.nn.functional as F
+# import torch
+# import torch.nn.functional as F
+
+
 def conv3x3(in_planes, out_planes, stride=1):
     "3x3 convolution with padding"
-    return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
-                     padding=1, bias=False)
+    return nn.Conv2d(
+        in_planes, out_planes, kernel_size=3, stride=stride, padding=1, bias=False
+    )
+
+
 class BasicBlock(nn.Module):
-    def __init__(self, inplanes, planes, stride=1, downsample=False, upsample=False, nobn = False):
+    def __init__(
+        self, inplanes, planes, stride=1, downsample=False, upsample=False, nobn=False
+    ):
         super(BasicBlock, self).__init__()
         self.upsample = upsample
         self.downsample = downsample
@@ -19,7 +26,7 @@ class BasicBlock(nn.Module):
             self.bn1 = nn.BatchNorm2d(inplanes)
         self.relu = nn.ReLU(inplace=True)
         if self.downsample:
-            self.conv2 =nn.Sequential(nn.AvgPool2d(2,2), conv3x3(planes, planes))
+            self.conv2 = nn.Sequential(nn.AvgPool2d(2, 2), conv3x3(planes, planes))
         else:
             self.conv2 = conv3x3(planes, planes)
         if not self.nobn:
@@ -28,7 +35,9 @@ class BasicBlock(nn.Module):
             if self.upsample:
                 self.skip = nn.ConvTranspose2d(inplanes, planes, 4, 2, 1)
             elif self.downsample:
-                self.skip = nn.Sequential(nn.AvgPool2d(2,2), nn.Conv2d(inplanes, planes, 1, 1))
+                self.skip = nn.Sequential(
+                    nn.AvgPool2d(2, 2), nn.Conv2d(inplanes, planes, 1, 1)
+                )
             else:
                 self.skip = nn.Conv2d(inplanes, planes, 1, 1, 0)
         else:
@@ -59,8 +68,33 @@ class GEN_DEEP(nn.Module):
         self.ngpu = ngpu
         res_units = [256, 128, 96]
         inp_res_units = [
-            [256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256,
-             256], [256, 128, 128], [128, 96, 96]]
+            [
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+                256,
+            ],
+            [256, 128, 128],
+            [128, 96, 96],
+        ]
 
         self.layers_set = []
         self.layers_set_up = []
@@ -90,11 +124,15 @@ class GEN_DEEP(nn.Module):
                 # else:
                 # layers.append(MyBlock(curr_inp_resu[j], nunits))
 
-            self.layers_set_up[ru].append(nn.Upsample(scale_factor=2, mode='bilinear',align_corners=True))
+            self.layers_set_up[ru].append(
+                nn.Upsample(scale_factor=2, mode="bilinear", align_corners=True)
+            )
 
             self.layers_set_up[ru].append(nn.BatchNorm2d(nunits))
             self.layers_set_up[ru].append(nn.ReLU(True))
-            self.layers_set_up[ru].append(nn.ConvTranspose2d(nunits, nunits, kernel_size=1, stride=1))
+            self.layers_set_up[ru].append(
+                nn.ConvTranspose2d(nunits, nunits, kernel_size=1, stride=1)
+            )
             self.layers_set_final.append(nn.Sequential(*self.layers_set[ru]))
             self.layers_set_final_up.append(nn.Sequential(*self.layers_set_up[ru]))
 
