@@ -1,4 +1,5 @@
 import torch.nn as nn
+
 # import torch
 # import torch.nn.functional as F
 
@@ -125,7 +126,9 @@ class GEN_DEEP(nn.Module):
                 # layers.append(MyBlock(curr_inp_resu[j], nunits))
 
             self.layers_set_up[ru].append(
-                nn.Upsample(scale_factor=2, mode="bilinear", align_corners=True)
+                nn.functional.interpolate(
+                    scale_factor=2, mode="bilinear", align_corners=True
+                )
             )
 
             self.layers_set_up[ru].append(nn.BatchNorm2d(nunits))
