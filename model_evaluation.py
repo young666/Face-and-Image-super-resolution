@@ -36,13 +36,10 @@ def main():
     a = torch.load("model.pkl")
     net_G_low2high.load_state_dict(a)
     net_G_low2high = net_G_low2high.eval()
-    index = 0
     test_file = "test_res"
     if not os.path.exists(test_file):
         os.makedirs(test_file)
     for idx, data_dict in enumerate(test_loader):
-        print(idx)
-        index = index + 1
         data_low = data_dict["img16"]
         data_high = data_dict["img64"]
         img_name = data_dict["imgpath"][0].split("/")[-1]
