@@ -128,9 +128,10 @@ class GEN_DEEP(nn.Module):
 
             self.layers_set_up[ru].append(
                 partial(
-                    nn.functional.interpolate(
-                        scale_factor=2, mode="bilinear", align_corners=True
-                    )
+                    nn.functional.interpolate,
+                    scale_factor=2,
+                    mode="bilinear",
+                    align_corners=True,
                 )
             )
 
