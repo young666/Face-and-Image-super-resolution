@@ -19,7 +19,7 @@ class faces_super(data.Dataset):
         self.img_list = []
         dataset = datasets
         if dataset == "widerfacetest":
-            img_path = "/content/dataset/img_align_celeba_png_set_1_LR/"
+            img_path = "/content/dataset/recognized_img_align_celeba_png_set_1_HR/"
             list_name = glob(os.path.join(img_path, "*.png"))
             list_name.sort()
             for filename in list_name:  # png
